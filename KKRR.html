@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            padding: 20px;
+            background-color: #0078d4;
+            color: white;
+        }
+
+        #searchForm {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #searchResults {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        a {
+            color: #0078d4;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        p {
+            color: #333;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 200px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web Search</h1>
+    <form id="searchForm">
+        <label for="searchQuery">Enter your search query:</label>
+        <input type="text" id="searchQuery" name="q" required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="searchResults"></div>
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const searchResults = document.getElementById('searchResults');
+
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const searchQuery = document.getElementById('searchQuery').value;
+
+            // Replace 'YOUR_API_KEY' with your actual Google Custom Search API key
+            const apiKey = 'AIzaSyA5-hO3BX5IxBy0g4XL5HCS_p2q5dg4QC4';
+            const cx = '72897843cd01d4e67';
+
+            // Construct the API URL
+            const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cx}&q=${searchQuery}`;
+
+            // Fetch search results
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const items = data.items;
+
+                    // Clear previous results
+                    searchResults.innerHTML = '';
+
+                    // Display search results
+                    items.forEach(item => {
+                        const link = document.createElement('a');
+                        link.href = item.link;
+                        link.textContent = item.title;
+                        link.target = '_blank';
+
+                        const snippet = document.createElement('p');
+                        snippet.textContent = item.snippet;
+
+                        const resultDiv = document.createElement('div');
+                        resultDiv.appendChild(link);
+                        resultDiv.appendChild(snippet);
+
+                        searchResults.appendChild(resultDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching search results:', error);
+                });
+        });
+    </script>
+</body>
+</html>
